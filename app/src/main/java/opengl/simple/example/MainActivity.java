@@ -39,23 +39,33 @@ public class MainActivity extends AppCompatActivity {
 
         loadImage();
         initGLSurfaceVew();
-      initListeners();
+        initListeners();
 
 
     }
 
     private void initListeners() {
         binding.btnFilter1.setOnClickListener(v -> {
-            imageRenderer.setImage(bitmap);
+            imageRenderer.setFilter(0);
+            binding.glSurfaceView.requestRender();
+        });
+
+        binding.btnFilter2.setOnClickListener(v -> {
+          imageRenderer.setFilter(1);
+          binding.glSurfaceView.requestRender();
+        });
+
+        binding.btnFilter3.setOnClickListener(v -> {
+            imageRenderer.setFilter(2);
             binding.glSurfaceView.requestRender();
         });
     }
 
     private void loadImage() {
-    bitmap = BitmapFactory.decodeResource(getResources(),  R.drawable.image_sample);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.image_sample);
         binding.imageView.setImageBitmap(bitmap);
         imageRenderer = new ImageRenderer(this, bitmap);
-      //  binding.glSurfaceView.requestRender();
+        //  binding.glSurfaceView.requestRender();
     }
 
     private void initGLSurfaceVew() {
@@ -68,12 +78,6 @@ public class MainActivity extends AppCompatActivity {
         binding.glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
     }
-
-  
-
-
-
-
 
 
     @Override

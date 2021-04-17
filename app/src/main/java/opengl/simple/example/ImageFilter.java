@@ -35,36 +35,38 @@ public class ImageFilter {
             "  vTexPosition = aTexPosition;" +
             "}";
 
-//    private static final String fragmentShaderCode = "precision mediump float;" +
-//            "uniform sampler2D uTexture;" +
-//            "varying vec2 vTexPosition;" +
-//            "void main() {" +
-//            "  gl_FragColor = texture2D(uTexture, vTexPosition);" +
-//            "}";
+    private static final String fragmentShaderCode1 = "precision mediump float;" +
+            "uniform sampler2D uTexture;" +
+            "varying vec2 vTexPosition;" +
+            "void main() {" +
+            "  gl_FragColor = texture2D(uTexture, vTexPosition);" +
+            "}";
 
 
     //Deform
-//    private static final String fragmentShaderCode = "precision mediump float;" +
-//            "uniform sampler2D uTexture;" +
-//            "varying vec2 vTexPosition;" +
-//            "void main() {" +
-//            "  vec2 cen = vec2(0.5,0.5) - vTexPosition.xy;" +
-//            "  vec2 mcen = -0.07* log(length(cen)) * normalize(cen);" +
-//            "  gl_FragColor = texture2D(uTexture, vTexPosition.xy-mcen);" +
-//            "}";
+    private static final String fragmentShaderCode2 = "precision mediump float;" +
+            "uniform sampler2D uTexture;" +
+            "varying vec2 vTexPosition;" +
+            "void main() {" +
+            "  vec2 cen = vec2(0.5,0.5) - vTexPosition.xy;" +
+            "  vec2 mcen = -0.07* log(length(cen)) * normalize(cen);" +
+            "  gl_FragColor = texture2D(uTexture, vTexPosition.xy-mcen);" +
+            "}";
 
 
     // Color/Brightness/Hue
-    private static final String fragmentShaderCode = "precision mediump float;" +
-            "uniform sampler2D uTexture;"+
-            "  varying vec2 vTexPosition;"+
-            " void main()"+
-            " { "+
-            "  const vec3 W = vec3(0.2125, 0.1754, 0.0721);"+
-            "     vec3 irgb = texture2D(uTexture, vTexPosition).rgb;"+
-            "     float luminance = dot(irgb, W);"+
-            "     gl_FragColor = vec4(luminance, luminance, luminance, 1.);"+
+    private static final String fragmentShaderCode3 = "precision mediump float;" +
+            "uniform sampler2D uTexture;" +
+            "  varying vec2 vTexPosition;" +
+            " void main()" +
+            " { " +
+            "  const vec3 W = vec3(0.2125, 0.1754, 0.0721);" +
+            "     vec3 irgb = texture2D(uTexture, vTexPosition).rgb;" +
+            "     float luminance = dot(irgb, W);" +
+            "     gl_FragColor = vec4(luminance, luminance, luminance, 1.);" +
             "  }";
+
+    private String fragmentShaderCode = fragmentShaderCode1;
 
 
     private static final float[] positionVertices = {-1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f};
@@ -77,6 +79,27 @@ public class ImageFilter {
         initializeProgram();
     }
 
+    public ImageFilter(int filter) {
+
+      setFragmentShaderCode(filter);
+        initializeBuffers();
+        initializeProgram();
+
+    }
+
+    private void setFragmentShaderCode(int filter) {
+        switch (filter) {
+            case 0:
+                fragmentShaderCode = fragmentShaderCode1;
+                break;
+            case 1:
+                fragmentShaderCode = fragmentShaderCode2;
+                break;
+            case 2:
+                fragmentShaderCode = fragmentShaderCode3;
+                break;
+        }
+    }
 
     /**
      * 1. we need to put our float arrays into a float buffer
@@ -149,4 +172,6 @@ public class ImageFilter {
         //Draw the object
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
     }
+
+
 }

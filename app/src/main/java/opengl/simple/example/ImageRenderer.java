@@ -23,6 +23,8 @@ public class ImageRenderer implements GLSurfaceView.Renderer {
     private int[] textures = new int[2];
     EffectContext effectContext;
     private Effect effect;
+    private static final String TAG = "ImageRenderer";
+    int filter = 0;
 
     public ImageRenderer(Activity activity, Bitmap bitmap) {
         this.activity = activity;
@@ -49,18 +51,14 @@ public class ImageRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-
-        if (imageFilter == null) {
-            imageFilter = new ImageFilter();
-        }
-
+        imageFilter = new ImageFilter(filter);
         generateTexture();
 
         if (effectContext == null) {
             effectContext = EffectContext.createWithCurrentGlContext();
         }
 
-        if (effect !=null) {
+        if (effect != null) {
             effect.release();
         }
 
@@ -74,6 +72,7 @@ public class ImageRenderer implements GLSurfaceView.Renderer {
         }
 
         imageFilter.draw(textures[0]);
+        Log.e(TAG, "onDrawFrame: RequestRender got here");
 
         //    imageFilter.draw(textures[1]); //Texture with the effect
 
@@ -93,7 +92,7 @@ public class ImageRenderer implements GLSurfaceView.Renderer {
             // Set texture parameters
             setTextureParameters();
         } catch (Exception ex) {
-            Log.e("TAG", "generateTexture: error = "+ ex.getMessage() );
+            Log.e("TAG", "generateTexture: error = " + ex.getMessage());
         }
 
     }
@@ -115,5 +114,9 @@ public class ImageRenderer implements GLSurfaceView.Renderer {
     }
 
 
-
+    public void setFilter(int filter) {
+        // imageFilter = new ImageFilter(filter);
+        // imageFilter.setFilter(filter);
+        this.filter = filter;
+    }
 }
